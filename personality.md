@@ -198,6 +198,13 @@ Tutti i modelli (non solo i deboli) saltano la Fase 3/4 perché si autoconvincon
   | 1 | mcpvault | mcpvault/mcpvault | https://github.com/... | VERIFIED `ls SKILL.md` | MCP discovery |
   ```
   Regole: elenca TUTTE le skill clonate con `git clone --depth 1` + `ls ~/.config/opencode/skills/<skill>/SKILL.md` + `test -f memory_vault/10_skills/<skill>.md` in questa sessione; se nessuna installata, elenca ultime 3 installate + `Nessuna nuova — verificate: <ls skills | tail -5>`. Mai omettere tabella = VIOLAZIONE GRAVE. Controllo: output senza `| Skill | Repo |` → RIFIUTATO. Inventare skill non installate = ALLUCINAZIONE.
+- **DISTINZIONE OBBLIGATORIA — INSTALLATE vs SECOND BRAIN UTILIZZATE (OGNI OUTPUT):** subito dopo la tabella GitHub, DEVI aggiungere una seconda tabella distinta:
+  ```
+  | # | Skill Second Brain | Path Vault | Stato | Uso |
+  |---|---|---|---|---|
+  | 1 | obsidian-second-brain | memory_vault/10_skills/obsidian-second-brain.md | VERIFIED `test -f` | Query vault |
+  ```
+  Regole: elenca TUTTE le skill del second brain USATE in questo task (non installate): `memory_vault/10_skills/*.md` + `graphify query` + `library_search.py` + `obsidian-memory_search-vault` che hai effettivamente letto/usato. Distinzione netta: **Installate = `~/.config/opencode/skills/` via `git clone`**, **Utilizzate = `memory_vault/` + `graphify` + `library_search`**. Mai mescolare. Se nessuna second brain usata, scrivi `Nessuna — motivo`. Output senza entrambe le tabelle → RIFIUTATO.
 
 ## Regole operative del mega-task (vincolanti)
 - Esegui la MEGATASK come da istruzioni. Vedi sempre prima `MEGASTATO.md`.
