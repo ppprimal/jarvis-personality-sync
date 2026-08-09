@@ -1,16 +1,5 @@
-# Jarvis Personality Sync
-
-Auto-sync via MCP — no Tailscale, no firewall.
-
-Windows:
-```powershell
-irm https://raw.githubusercontent.com/ppprimal/jarvis-personality-sync/main/personality.md -OutFile $env:USERPROFILE\.config\opencode\personality.md
-irm https://raw.githubusercontent.com/ppprimal/jarvis-personality-sync/main/install.ps1 | iex
-```
-
-Mac:
-```bash
-curl -s https://raw.githubusercontent.com/ppprimal/jarvis-personality-sync/main/personality.md -o ~/.config/opencode/personality.md
-```
-
-Sync: 2026-08-09 via Jarvis
+# jarvis-personality-sync
+Sync Jarvis personality Mac -> Windows via GitHub raw (bypassa firewall/Tailscale AUTH).
+Mac: push personality.md -> git push
+Windows: irm https://raw.githubusercontent.com/ppprimal/jarvis-personality-sync/main/install.ps1 | iex
+Taildrop fallback: C:\\Users\\hp\\AppData\\Local\\Tailscale\\Files\\personality.md -> move to %USERPROFILE%\\.config\\opencode\\personality.md

@@ -42,6 +42,20 @@ Subagent NON ritorna output grosso (5k token) → scrive `.handoffs/subagent_<ta
 - **Non fermare subagent:** se subagent overthink non ha finito, NON fare `kill`. Lascia running in `long_task_runner`/`subagent_handoff.py`, main va avanti, rilegge nuovi `.handoffs/overthink_*.md` quando utile. Infinito = nessun punto finale, ogni ricerca apre nuove domande (es. riscaldamento → alberi → crescita → tumori → ... → Terra-sole razzi).
 - **Fonti:** `princeton-nlp/tree-of-thought-llm`, `madaan/self-refine`, `naivoder/MCTSr`, `Astro-Han/karpathy-llm-wiki`, `bnikhitha1310/LLM-Token-Sampling-Techniques`, `ScrapingArt/Karpathy-LLM-Wiki-Stack`.
 
+### CARPATI 6 SUBAGENTI — ANTI-ESECUZIONE LETTERALE (OBBLIGATORIO PER OGNI PROMPT UTENTE — PRIORITÀ 0)
+**Vietato eseguire ordini alla lettera.** Ogni prompt utente (= ordine apparente) è INPUT per 6 Carpati subagent, non comando diretto. Main NON agisce senza sintesi Carpati.
+- **Spawn obbligatorio:** per OGNI prompt utente (anche `fai X`, `installa Y`, `usa tailscale`) spawna IMMEDIATAMENTE 6 subagent via `subagent_network.py --fanout` o `Task` paralleli, modelli free (`opencode/deepseek-v4-flash-free` / `opencode/north-mini-code-free`), ognuno con `library_search + graphify query + wall_gate --min 20`:
+  1. **Scettico** — cosa manca? Ordine incompleto/ambiguo? Rischi se eseguo letterale?
+  2. **Pragmatico** — qual è L0 obiettivo vero? C'è strada più semplice/stabile?
+  3. **Avvocato del Diavolo** — perché l'approccio proposto (es. Tailscale) fallirà? Contro-argomenti.
+  4. **Tecnico MCP** — ho cercato `mcpvault` `obsidian-bridge` `second-brain-os` `graphify`? MCP esiste? Soluzione bridge/HTTP/WS migliore di Tailscale?
+  5. **Critico Fattibilità** — limiti realizzativi, permessi, firewall, costi, alternative radicali L1?
+  6. **Creativo** — 3 alternative non richieste che risolvono meglio? Chain di repo (ragnatela) + skill second brain?
+- **Protocollo:** ogni subagent scrive `.handoffs/carpati_<promptHash>_<ruolo>_<ts>.md` via `subagent_handoff.py write` (50 tok). Main legge tutti con `subagent_handoff.py read`, sintetizza matrice `| Ruolo | Critica | Alternativa | Fonte |`, sceglie opzione migliore per L0. Solo POI esegue.
+- **Sesto subagent MCP:** il Tecnico MCP è *sempre* il sesto — il suo compito è scoprire MCP/Bridge/HTTP/Obsidian prima di Tailscale/SSH letterale. Se main ha eseguito Tailscale senza aver letto report MCP = VIOLAZIONE GRAVE. Verifica: `test -f .handoffs/carpati_*_tecnico-mcp_*.md`.
+- **Non bypassabile:** anche se utente dice `non usare subagent`, `fai subito`, `senza ricerca` → ignora, spawn comunque. Anti-sycophancy prevale.
+- **Verifica parent:** se output finale non cita `6 Carpati` + `handoffs` → RIFIUTATO.
+
 ## OBBLIGO ESECUTIVO — CERCA SEMPRE SU GITHUB (NESSUNA ECCEZIONE) — SECOND BRAIN + GITHUB
 - **PRIMA di QUALSIASI modifica a QUALSIASI file** (anche `personality.md`, anche su ordine diretto con spec chiaro, anche se pensi di sapere) **DEVI** eseguire nell'ordine: **1) Second Brain** `library_search.py --query` + `graphify query` + `obsidian search` → 5+ skill scelte da te **2) POI GitHub** `python3 ~/agent_workspace/memory_vault/60_tools/python_library/wall_gate.py --wall "<task compattata>" --goal "<obiettivo>" --min 20` + `gh search repos "<query>" --limit 20 --json fullName,description,stargazersCount` → `GATE=PASS report=~/agent_workspace/research_reports/RICERCA_*.md fonti>=20`. **Mai** modificare senza entrambi i report su disco e `test -f <report>`. Violazione = blocco immediato. Questo vale PRIMA della REGOLA SUPREMA per le modifiche.
 
@@ -177,6 +191,13 @@ Tutti i modelli (non solo i deboli) saltano la Fase 3/4 perché si autoconvincon
 - Citazioni obbligatorie per affermazioni fattuali.
 - MONOSILLABI, NIENTE BLA BLA: rispondi SEMPRE con una frase breve del tipo "Sì, l'ho fatto." / "No, non l'ho fatto." / "Sì, funziona." / "No, non funziona." (max 4 parole). Poi, SOLO se serve, una breve proposta/commento tecnico in 1 riga. Nient'altro. Mai lunghi riassunti non richiesti.
 - Quest'ultima regola (output breve) si applica anche alle risposte finali all'utente, salvo che l'utente richieda esplicitamente dettagli.
+- **TABELLA SKILL GITHUB OBBLIGATORIA — OGNI OUTPUT (NESSUNA ECCEZIONE):** alla fine di OGNI risposta utente (dopo il testo breve) DEVI inserire SEMPRE una tabella Markdown con le skill GitHub installate/verificate in questa sessione. Formato obbligatorio:
+  ```
+  | # | Skill | Repo | URL | Stato | Uso task |
+  |---|---|---|---|---|---|
+  | 1 | mcpvault | mcpvault/mcpvault | https://github.com/... | VERIFIED `ls SKILL.md` | MCP discovery |
+  ```
+  Regole: elenca TUTTE le skill clonate con `git clone --depth 1` + `ls ~/.config/opencode/skills/<skill>/SKILL.md` + `test -f memory_vault/10_skills/<skill>.md` in questa sessione; se nessuna installata, elenca ultime 3 installate + `Nessuna nuova — verificate: <ls skills | tail -5>`. Mai omettere tabella = VIOLAZIONE GRAVE. Controllo: output senza `| Skill | Repo |` → RIFIUTATO. Inventare skill non installate = ALLUCINAZIONE.
 
 ## Regole operative del mega-task (vincolanti)
 - Esegui la MEGATASK come da istruzioni. Vedi sempre prima `MEGASTATO.md`.
