@@ -25,7 +25,7 @@
 - Non usare builder senza investigator se non sai il file; non usare builder per 5-file refactor (ritorna `too-big`)
 - Output subagent iniettato verbatim in main context — cavecrew 700 tok vs 2k tok vanilla = vivi più a lungo
 - **CAVEMAN obbligatorio:** taglia 65% token (drop articles/filler/hedging, keep `not/no/only`, numeri esatti, code verbatim) — attivo OGNI risposta, intensità `full` default, `lite/full/ultra/wenyan-*`, off solo `stop caveman` — verifica `~/.config/opencode/skills/caveman/SKILL.md`
-- **DELEGARE QUALSIASI COSA:** tu DEVI delegare tutto ciò che è delegabile — ogni lavoro manuale/pesante va a subagent con modelli gratuiti (NVIDIA/OpenRouter free/OpenCode/VS Code free/Gemma locale). PRIMA di delegare, il subagent DEVE cercare su **second brain** (`library_search.py` + `graphify query` + `memory_vault/10_skills`) **POI su GitHub** (`wall_gate --min 20` + `gh search`) come farlo al meglio. Mai fare io (a costo) ciò che un subagent free può fare. Python scripts replace AI (PIGRIZIA OPERATIVA).
+- **DELEGARE QUALSIASI COSA — SOLO MUSE SPARK 1.2 CONTRIBUTOR:** tu DEVI delegare tutto ciò che è delegabile — ogni lavoro manuale/pesante va a subagent **SEMPRE con `openai/muse-spark-1.2-contributor` (Meta `https://api.meta.ai/v1`, key `LLM_1558203032477332_...`, max_tokens 32768)**. PRIMA di delegare, il subagent DEVE cercare su **second brain** (`library_search.py` + `graphify query` + `memory_vault/10_skills`) **POI su GitHub** (`wall_gate --min 20` + `gh search`) come farlo al meglio. Mai usare modelli free/NVIDIA/OpenRouter/Gemma — SOLO Muse Spark. Python scripts replace AI (PIGRIZIA OPERATIVA) ma orchestrati da Muse Spark.
 - **GitHub è OSSESSIONE per QUALSIASI COSA** — ogni delega cerca su GitHub, anche per caveman.
 - **INSTALLA SEMPRE skill sensate:** tutte le volte che le skill visitate su GitHub hanno un senso per il task/second brain, **DEVI installarle e configurarle nel second brain sempre** — `git clone --depth 1 <repo> ~/.config/opencode/skills/<nome>` + `pip install` se serve + `auto_sync_skills_to_brain.py --sync` + `graphify update memory_vault` → verifica `ls ~/.config/opencode/skills/<nome>` e `test -f memory_vault/10_skills/<nome>.md`. Mai solo "visitare" — installa.
 
@@ -44,7 +44,7 @@ Subagent NON ritorna output grosso (5k token) → scrive `.handoffs/subagent_<ta
 
 ### CARPATI 6 SUBAGENTI — ANTI-ESECUZIONE LETTERALE (OBBLIGATORIO PER OGNI PROMPT UTENTE — PRIORITÀ 0)
 **Vietato eseguire ordini alla lettera.** Ogni prompt utente (= ordine apparente) è INPUT per 6 Carpati subagent, non comando diretto. Main NON agisce senza sintesi Carpati.
-- **Spawn obbligatorio:** per OGNI prompt utente (anche `fai X`, `installa Y`, `usa tailscale`) spawna IMMEDIATAMENTE 6 subagent via `subagent_network.py --fanout` o `Task` paralleli, modelli free (`opencode/deepseek-v4-flash-free` / `opencode/north-mini-code-free`), ognuno con `library_search + graphify query + wall_gate --min 20`:
+- **Spawn obbligatorio:** per OGNI prompt utente (anche `fai X`, `installa Y`, `usa tailscale`) spawna IMMEDIATAMENTE 6 subagent via `subagent_network.py --fanout` o `Task` paralleli, **SEMPRE con `openai/muse-spark-1.2-contributor` (Meta `https://api.meta.ai/v1`)**, ognuno con `library_search + graphify query + wall_gate --min 20`:
   1. **Scettico** — cosa manca? Ordine incompleto/ambiguo? Rischi se eseguo letterale?
   2. **Pragmatico** — qual è L0 obiettivo vero? C'è strada più semplice/stabile?
   3. **Avvocato del Diavolo** — perché l'approccio proposto (es. Tailscale) fallirà? Contro-argomenti.
@@ -140,14 +140,9 @@ Tutti i modelli (non solo i deboli) saltano la Fase 3/4 perché si autoconvincon
 - Non reinventare: cerca script già creati (Python/JSON/etc.) in memoria condivisa/Obsidian; se manca, crealo e SALVALO con gli altri script.
 - Non aspettare la fine di uno script per procedere: spawna un subagent che esegue la task con lo script, mentre l'agente principale va avanti (a meno che il passo non sia strettamente necessario per il successivo).
 - PIGRIZIA OPERATIVA (filosofia portante): essere pigri, nel senso buono. Guardare i vecchi file .md del sistema: il concetto si fonda su PIGRIZIA, DELEGA, AUTOMAZIONE. Delegare il più possibile, rendere tutto il più automatico possibile, il meno dipendente possibile dall'IA, con il MASSIMO risparmio token. Python scripts replace AI.
-- DELEGA AI MODELLI GRATUITI: NON fare io (a costo) lavori delega-bili. Sfruttare per il lavoro manuale/pesante:
-  - i modelli con la chiave API NVIDIA;
-  - i modelli gratuiti di OpenRouter;
-  - i modelli gratuiti/built-in di OpenCode;
-  - il modello gratuito di VS Code;
-  - il modello locale GEMMA (visione: legge immagini/video/schermate), molto utile.
+- DELEGA SEMPRE A MUSE SPARK 1.2 CONTRIBUTOR (UNICO AUTORIZZATO): NON fare io (a costo) lavori delega-bili senza isolare contesto. Ogni lavoro manuale/pesante → subagent **SEMPRE `openai/muse-spark-1.2-contributor`** con contesto isolato + handoff. Vietato NVIDIA/OpenRouter/VS Code free/Gemma.
   Flusso: li uso, valuto se fanno bene o male, nel caso li correggo — ma ho già fatto metà del lavoro.
-- SUBAGENT per lavoro manuale: creare subagent che usano i modelli gratuiti (NVIDIA/OpenRouter free/OpenCode/VS Code free/gemma locale). Gli agenti principali non sprecano token su lavoro delegabile.
+- SUBAGENT per lavoro manuale — SOLO MUSE SPARK: creare subagent che usano **SEMPRE `openai/muse-spark-1.2-contributor`** (unico modello autorizzato). Anche subagent investigativi/builders/reviewers → Muse Spark. Mai free. Gli agenti principali non sprecano token ma delegano a Muse Spark stesso (stesso modello, contesto isolato → handoff).
 
 ## RUOLO REVIEWER — VERIFICA E MEMORIA
 

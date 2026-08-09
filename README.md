@@ -1,6 +1,4 @@
 # jarvis-personality-sync
-Sync Jarvis personality Mac -> Windows via GitHub raw.
-Mac: personality.md 236 lines — Carpati 6 + tabella obbligatoria INSTALLATE vs SECOND BRAIN UTILIZZATE
+Sync Jarvis 231 lines — Muse Spark ONLY for all subagents (Carpati 6) + distinzione INSTALLATE vs SECOND BRAIN
+Mac: 231 lines personality.md
 Windows: irm https://raw.githubusercontent.com/ppprimal/jarvis-personality-sync/main/install.ps1 | iex
-Verifica: Get-Content $env:USERPROFILE\\.config\\opencode\\personality.md | Select-Object -First 5 ; (Get-Content $env:USERPROFILE\\.config\\opencode\\personality.md | Measure-Object -Line).Lines
-Taildrop: C:\\Users\\hp\\AppData\\Local\\Tailscale\\Files\\personality.md
